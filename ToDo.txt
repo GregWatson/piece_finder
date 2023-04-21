@@ -1,0 +1,6 @@
+ToDo:
+- rotate piece by a few degress, not just 90
+- try to speed up match by starting with fewer kp and if no matches then increase.
+- same as above but change threshold?
+- Is it faster/better to change num kp or threshold?
+- parellelize search across all cores?
