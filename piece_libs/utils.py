@@ -75,9 +75,12 @@ def draw_rect(img, x1,y1,x2,y2,color, mode=0):
 # openCV stores color us a numpy array in reverse order (i.e. b,g,r) so this simply reverses it.
 def reverse_img_color(img):
     width, height = (img.shape[1], img.shape[0])
+    t = 0
     for y in range(height):
         for x in range(width):
-            img[y][x] = [img[y][x][2], img[y][x][1], img[y][x][0] ]
+            tmp = img[y][x][2]
+            img[y][x][2] = img[y][x][0]
+            img[y][x][0] = tmp
 
 # Create a copy of a sub image
 def get_sub_image(img, x1, y1, x2, y2):
