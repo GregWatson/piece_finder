@@ -9,10 +9,10 @@ max_results = 4  # maximum number of matching patches to display
 red = (200,0,0)
 grey100 = (100,100,100)
 
-#main_name = 'hedgehog_cover.jpg'
-#piece_name = 'hedgehog_pc1.jpg'
-main_name = 'hello.bmp'
-piece_name = 'hello_pc1.bmp'
+main_name = 'hedgehog_cover.jpg'
+piece_name = 'hedgehog_pc1.jpg'
+#main_name = 'hello.bmp'
+#piece_name = 'hello_pc1.bmp'
 
 print(f"Loading main image {main_name} and piece image {piece_name}")
 
