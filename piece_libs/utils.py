@@ -1,5 +1,7 @@
 # Find the best match between 'piece' image and patches of the main image.
 
+import os
+import math
 import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
@@ -11,6 +13,47 @@ class Match():
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
+
+class Jigsaw():
+    def __init__(self, name='Unnamed', num_pieces=1000, img=None):
+        self.name = name
+        self.num_pieces = num_pieces
+        self.img = img
+        self.x = 0 # pixels wide
+        self.y = 0 # pixels high
+        self.num_x_pieces = 0
+        self.num_y_pieces = 0
+        self.piece_x = 0 # pixels wide for a square-ish piece
+        self.piece_y = 0 # pixels high for a square-ish piece
+        self.filepath = ''
+
+    # using knowledge of total number of pieces, and the X,Y pixel sizes
+    # we can make a reasonable guess at the number of pieces in X and Y.
+    def compute_num_x_y_pieces(self):
+        assert(self.y and self.x), f"The self.x and self.y pixel counts must be non-zero"
+        x_to_y_ratio = self.x/self.y
+        ny = round(math.sqrt(self.num_pieces/x_to_y_ratio))
+        nx = round(self.num_pieces / ny)
+        return(nx, ny)
+
+    def load_jigsaw_from_file(self, file_name='Unnamed'):
+        path_main = os.path.normpath(os.path.join(os.getcwd(), '..', 'resources', file_name))
+        img = cv.imread(path_main)   
+        assert img is not None, f"{path_main} file could not be read, check with os.path.exists()"
+        self.filepath = path_main
+        self.img = img
+        self.x, self.y = (img.shape[1], img.shape[0])
+        self.num_x_pieces, self.num_y_pieces = self.compute_num_x_y_pieces()
+        self.piece_x = round(self.x/self.num_x_pieces)
+        self.piece_y = round(self.y/self.num_y_pieces)
+
+    def print(self):
+        print(f"Jigsaw name is {self.name}. Located at {self.filepath}.")
+        print(f"  - it is {self.x} pixels in X by {self.y} pixels in Y.")
+        print(f"  - it is {self.num_pieces} pieces, nominally {self.num_x_pieces} pieces in X by {self.num_y_pieces} in Y.")
+        print(f"  - so a square patch is typically {self.piece_x} in X by {self.piece_y} in Y.")
+
+
 
 # Try to find an orb detector that yields a good number of key points but not too many.
 # return Orb detector object else None
@@ -27,7 +70,7 @@ def get_orb_detector(img, nfeatures=100):
 
         # find the list of keypoints with this Orb configuration
         kp = orb.detect(img,None)
-        # print(f"edgeThresh {edgeThreshold} yielded {len(kp)} key points")
+        print(f"edgeThresh {edgeThreshold} yielded {len(kp)} key points")
         if (len(kp) < nfeatures):
             return orb
 
